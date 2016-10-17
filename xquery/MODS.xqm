@@ -3,11 +3,11 @@ xquery version '3.0' ;
 declare namespace tei = 'http://www.tei-c.org/ns/1.0';
 declare namespace m = 'http://www.loc.gov/mods/v3';
 
-declare variable $bdd := "crcao"; (: donner le nom de la base de données avec vos références au format MODS :)
+declare variable $bdd := ""; (: donner le nom de la base de données avec vos références au format MODS :)
 
-declare variable $surname := "Pons"; (: donner le nom de famille de l'auteur du document :)
-declare variable $forename := "Philippe"; (: donner le prénom de l'auteur du document :)
-declare variable $halauthor := "025"; (: donner l'identifiant de l'auteur du document: cf. https://aurehal.archives-ouvertes.fr/author :) 
+declare variable $surname := ""; (: donner le nom de famille de l'auteur du document :)
+declare variable $forename := ""; (: donner le prénom de l'auteur du document :)
+declare variable $halauthor := ""; (: donner l'identifiant de l'auteur du document: cf. https://aurehal.archives-ouvertes.fr/author :) 
 declare variable $idhal := ""; (: donner l'identifiant hal de l'auteur du document :) (: FACULTATIF :)
 declare variable $email := ""; (: donner l'adresse mail de l'auteur du document :) (: FACULTATIF :)
 declare variable $lien := ""; (: donner l'URL de votre page personnelle  :) (: FACULTATIF :)
