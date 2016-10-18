@@ -3,9 +3,9 @@ xquery version '3.0' ;
 declare namespace tei = 'http://www.tei-c.org/ns/1.0';
 declare namespace m = 'http://www.loc.gov/mods/v3';
 
-declare variable $bdd := ""; (: donner le nom de la base de données avec vos références au format MODS :)
+declare variable $bdd := "crcao"; (: donner le nom de la base de données avec vos références au format MODS :)
 
-declare variable $surname := ""; (: donner le nom de famille de l'auteur du document :)
+declare variable $surname := "Pons"; (: donner le nom de famille de l'auteur du document :)
 declare variable $forename := ""; (: donner le prénom de l'auteur du document :)
 declare variable $halauthor := ""; (: donner l'identifiant de l'auteur du document: cf. https://aurehal.archives-ouvertes.fr/author :) 
 declare variable $idhal := ""; (: donner l'identifiant hal de l'auteur du document :) (: FACULTATIF :)
@@ -363,23 +363,6 @@ declare function local:getHalTypology($node as xs:string) {
 
 declare function local:getTEI($node as element(m:mods)*, $options as xs:string) {
   <TEI>
-    <teiHeader>
-      <fileDesc>
-        <titleStmt>
-          <title>HAL TEI import</title>
-        </titleStmt>
-        <publicationStmt>
-          <distributor>Philippe Pons</distributor>
-          <availability status="restricted">
-            <licence target="http://creativecommons.org/licenses/by/4.0/">Distributed under a Creative Commons Attribution 4.0 International License</licence>
-          </availability>
-          <date when="{ current-dateTime() }"/>
-        </publicationStmt>
-        <sourceDesc>
-          <p part="N">HAL API platform</p>
-        </sourceDesc>
-      </fileDesc>
-    </teiHeader>
     <text>
       <body>
         <listBibl>{
@@ -399,9 +382,6 @@ declare function local:getTEI($node as element(m:mods)*, $options as xs:string) 
                 <licence target="http://creativecommons.org/licenses/by-nc/"/>
               </availability>
             </publicationStmt>
-            (: <seriesStmt>
-              <idno type="stamp" n="SHS">Sciences de l&#39;Homme et de la Société</idno>
-            </seriesStmt> :)
             {if ($node/m:note) 
             then
               <notesStmt>{
@@ -441,9 +421,9 @@ for $bibl in db:open($bdd)/m:modsCollection/m:mods
 let $genre := $bibl/m:genre[@authority='zotero']
 let $path := file:create-dir('bibliographie')
 return
-  file:write( concat( file:current-dir(), '/bibliographie/', $surname, '-', $genre, '-',  generate-id($bibl), '.xml' ), local:getTEI($bibl, $genre) )
+  let $zip := archive:create-from( concat(file:current-dir(), '/bibliographie/'), file:write( concat( file:current-dir(), '/bibliographie/', $surname, '-', $genre, '-',  generate-id($bibl), '.xml' ), local:getTEI($bibl, $genre) ) )
+  return 
+    (file:write-binary('bibliographie.zip', $zip) )
   
-
-
 
 
