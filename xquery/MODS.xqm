@@ -3,9 +3,9 @@ xquery version '3.0' ;
 declare namespace tei = 'http://www.tei-c.org/ns/1.0';
 declare namespace m = 'http://www.loc.gov/mods/v3';
 
-declare variable $bdd := "crcao"; (: donner le nom de la base de données avec vos références au format MODS :)
+declare variable $bdd := ""; (: donner le nom de la base de données avec vos références au format MODS :)
 
-declare variable $surname := "Pons"; (: donner le nom de famille de l'auteur du document :)
+declare variable $surname := ""; (: donner le nom de famille de l'auteur du document :)
 declare variable $forename := ""; (: donner le prénom de l'auteur du document :)
 declare variable $halauthor := ""; (: donner l'identifiant de l'auteur du document: cf. https://aurehal.archives-ouvertes.fr/author :) 
 declare variable $idhal := ""; (: donner l'identifiant hal de l'auteur du document :) (: FACULTATIF :)
@@ -274,11 +274,11 @@ declare function local:getLanguage($node) {
 };
 
 declare function local:getKeywords($node as element()*) {
-  <keywords scheme="author">{
-    for $key in $node/m:subject
+  <keywords scheme="author">
+    {for $key in $node/m:subject
     return
-      <term xml:lang="{ local:getLanguage($node[1]) }">{ normalize-space($key) }</term>
-  }</keywords>
+      <term xml:lang="{ local:getLanguage($node[1]) }">{ normalize-space($key) }</term>}
+  </keywords>
 };
 
 declare function local:getAbstract($node as element(m:abstract)*) {
@@ -382,12 +382,12 @@ declare function local:getTEI($node as element(m:mods)*, $options as xs:string) 
                 <licence target="http://creativecommons.org/licenses/by-nc/"/>
               </availability>
             </publicationStmt>
-            {if ($node/m:note) 
-            then
-              <notesStmt>{
-                local:getNotes($node/m:note)
-              }</notesStmt>
-            else () }
+            <notesStmt>{
+              local:getNotes($node/m:note),
+              <note type="audience" n="2">International</note>,
+              <note type="popular" n="0">No</note>,
+              <note type="peer" n="1">Yes</note>
+            }</notesStmt>
             <sourceDesc>
               <biblStruct>
                 <analytic>{
@@ -405,7 +405,7 @@ declare function local:getTEI($node as element(m:mods)*, $options as xs:string) 
                 <language ident="{ local:getLanguage($node/m:name[1]/m:namePart[1]) }"/>
               </langUsage>,
               <textClass>
-                { if ($node/m:subject) then local:getKeywords($node) else () }
+                { local:getKeywords($node) }
                 { local:getHalTypology($options) }
               </textClass>,
               local:getAbstract($node/m:abstract)
